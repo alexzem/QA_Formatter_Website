@@ -1,0 +1,99 @@
+body {
+	margin-left: 20px;
+	margin-top: 4px;
+	margin-bottom: 4px;
+	background-image: url('../img/background.jpg');
+	font-family: Arial,Helvetica,sans-serif;
+	text-align: left;
+}
+h2, p, form, input, textArea {
+	margin-top: 4px;
+	margin-bottom: 4px;
+	text-align: left;
+}
+
+h1 {
+	font-size: 30px;
+	font-weight: bold;
+	color: #f8981d;
+	margin-top: 15px;
+	margin-bottom: 5px;
+}
+
+h2 {
+	font-size: 18px;
+	color: #f8981d;
+	
+}
+
+p {
+	font-size: 14px;
+}
+
+#formOptions {
+	font-weight: bold;
+	width: 400px;
+	position:relative;
+	padding: 3px 0px;
+}
+
+#formOptions label {
+	display: block;
+}
+
+#formOptions label span{
+	display: block;
+	color: #666666;
+	font-size:14px;
+	float:left;
+	width:150px;
+	text-align:left;
+	padding:5px 5px 0px 0px;
+}
+
+#qaInput {
+	width: 500px;
+	height: 150px;
+	border: 1px solid #cccccc;
+	padding: 5px;
+} 
+
+#qaOutput {
+	width: 500px;
+	/* height: 100px; */
+	border: 1px solid #cccccc;
+	padding: 5px;
+}
+
+#clipboardButtonContainer {
+	position:relative;
+}
+
+#clipboardButton {
+    text-align:center; 
+	border: 1px solid #f88854;
+	width: 160px;
+	height: 30px;
+	color: #ffffff;
+	font-weight: bold;
+    background-color:#f8981d; 
+	padding: 5px;
+}
+
+#clipboardButton.hover { 
+	background-color:#f26631; 
+}
+
+#clipboardButton.active { 
+	background-color:#f8981d; 
+}
+
+#footer {
+	font-weight: 10px;
+	color: #888888;
+}
+
+#footer li {
+	font-weight: 10px;
+	color: #888888;
+}
