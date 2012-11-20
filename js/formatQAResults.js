@@ -20,6 +20,7 @@ var COOKIE_EXPIRATION_LIMIT = 360;
 var clipboard;
 var qaInput;
 var qaOutput;
+var selectOutputButton;
 var lastInput = "";
 var checkForInputIntervalID;
 
@@ -35,6 +36,7 @@ function setGlobalVariables() {
 	//console.log("Set global variables");
 	qaInput = document.getElementById("qaInput");
 	qaOutput = document.getElementById("qaOutput");
+	selectOutputButton = document.getElementById("selectOutputButton");
 }
 
 function addEventListeners() {
@@ -73,19 +75,7 @@ function getOutput() {
 	//console.log("Get output");
 	
 	var output = unescape(qaOutput.innerHTML);
-	//output = replaceURLEncodedNewline(output);
 	return output;
-}
-
-function replaceURLEncodedNewline(text){
-	var newline = "\r\n";
-	
-	text = escape(text);
-	
-	var encodedNewlineRegExp = /(%0D%0A|%0D|%0A)/g
-	text = text.replace(encodedNewlineRegExp, newline);  ;
-		
-	return unescape(text);
 }
 
 function isInt(value){ 
@@ -103,18 +93,8 @@ function updateOutput() {
 	
 	var output;
 	
-	//try {
-		//output = parseQAResults(getInput());
-		//output = parseQAResults();
-		var adFeedbackCollection = new AdFeedbackCollection(getInput());
-		printOutput(adFeedbackCollection);
-	//}
-	//catch (error) {
-		//output = error.message;
-	//}
-	
-	
-	//qaOutput.value = output;
+	var adFeedbackCollection = new AdFeedbackCollection(getInput());
+	printOutput(adFeedbackCollection);
 }
 
 function printOutput(adFeedbackCollection) {
@@ -122,27 +102,24 @@ function printOutput(adFeedbackCollection) {
 	var trailingWhiteSpacePattern = /\s$/;
 	var extraQuotationPattern = /(^")|(\"(?=\"))|("$)/g;
 	
-	var outputString = "<p><span class=siteSpecification>Site Specification</span><br />";
-	outputString += "<span class=functionality>Functionality</span><br />";
-	outputString += "<span class=tracking>Tracking</span</p>";
+	var outputString = "<p><span class=siteSpecification>Site Specification</span><br/>";
+	outputString += "<span class=functionality>Functionality</span><br/>";
+	outputString += "<span class=tracking>Tracking</span></p>";
 	
 	for ( var i = 0; i < qaResults.length; i++) {
 		
 		//Ad ID and title
-		outputString += "<p>";
+		outputString += "<br/><p>";
 		
 		for (var j = 0; j < qaResults[i].ads.length; j++) {
-			outputString += "<br/>";
+			//outputString += "<br/>";
 			outputString += qaResults[i].ads[j].id ? qaResults[i].ads[j].id + " - " : "";
 			outputString += qaResults[i].ads[j].title;
 			outputString += qaResults[i].ads[j].format ? " (" + qaResults[i].ads[j].format + ")": "";
-			outputString += "<br/>";
+			outputString += "</p>";
 		}
 		
 		outputString += "<ul>";
-		//
-		
-		
 		
 		//Ad issues
 		if (qaResults[i].issues.length > 0) {
@@ -160,28 +137,29 @@ function printOutput(adFeedbackCollection) {
 						}
 						else {
 							outputString += ". ";
-							outputString += qaResults[i].issues[k].additionalNotes.replace(extraQuotationPattern, "");
+							outputString += qaResults[i].issues[k].additionalNotes;
 						}
 					}
 				}
 			
 				if (qaResults[i].issues[k].potentialReasons.length > 1) {
 					outputString += "<br/>";
-					outputString += qaResults[i].issues[k].potentialReasons.replace(extraQuotationPattern, "");
+					outputString += qaResults[i].issues[k].potentialReasons;
 				}
 			
 				outputString += "</li>";
 			}
 		}
 		else {
-			//outputString += "<li>No issues found in QA</li>";
+			outputString += "<li>See \"All Ads\"</li>";
 		}
-		//
 		
 		//Close remaining tags
-		outputString += "</ul></p>";
-		//
+		outputString += "</ul>";
 	}
+	
+	outputString = outputString.replace(extraQuotationPattern, "");
+	outputString = outputString.replace(/Other\. /g, "");
 	
 	qaOutput.innerHTML = outputString;
 }
@@ -203,19 +181,22 @@ function getCategoryClass(category) {
 	}
 }
 
-function deduplicateIDs(idArray) {
-	//console.log("Deduplicate IDs");
-	//idArray.sort(ascendingNumericalSort);
-	
-	for (var i = 0; i < idArray.length; i++) {
-		var j = i + 1;
-		
-		while (j < idArray.length && idArray[i] == idArray[j]) {
-			idArray.splice(j, 1);
-		}
-	}
-	
-	return idArray;
+function selectText(element) {
+    var doc = document
+        , text = doc.getElementById(element)
+        , range, selection
+    ;    
+    if (doc.body.createTextRange) { //ms
+        range = doc.body.createTextRange();
+        range.moveToElementText(text);
+        range.select();
+    } else if (window.getSelection) { //all others
+        selection = window.getSelection();        
+        range = doc.createRange();
+        range.selectNodeContents(text);
+        selection.removeAllRanges();
+        selection.addRange(range);
+    }
 }
 
 function ascendingNumericalSort(a, b) {
