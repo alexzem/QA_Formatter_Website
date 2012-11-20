@@ -27,20 +27,9 @@ window.onload = init;
 
 function init() {
 	//console.log("init");
-	//initZeroClipboard();
 	setGlobalVariables();
 	addEventListeners();
 }
-
-/*function initZeroClipboard() {
-	ZeroClipboard.setMoviePath("swf/ZeroClipBoard.swf");
-	clipboard = new ZeroClipboard.Client();
-	clipboard.setHandCursor(true);
-	clipboard.glue("clipboardButton", "clipboardButtonContainer");
-	clipboard.addEventListener('mouseDown', function(client) {
-		clipboard.setText(getOutput());
-	});
-}*/
 
 function setGlobalVariables() {
 	//console.log("Set global variables");
@@ -116,8 +105,8 @@ function updateOutput() {
 	
 	//try {
 		//output = parseQAResults(getInput());
-		output = parseQAResults(getInput());
-		var adFeedbackCollection = new AdFeedbackCollection(output);
+		//output = parseQAResults();
+		var adFeedbackCollection = new AdFeedbackCollection(getInput());
 		printOutput(adFeedbackCollection);
 	//}
 	//catch (error) {
@@ -128,49 +117,32 @@ function updateOutput() {
 	//qaOutput.value = output;
 }
 
-function parseQAResults(input) {
-	var idPattern = /[1-9]\d{6,}/g;
-	var ids = input.match(idPattern);
-	
-	var rowSplitPattern = /[1-9]\d{6,}\t/g
-	
-	var rows = input.split(rowSplitPattern);
-	rows.shift();
-	
-	for (var j = 0; j < rows.length; j++) {
-		//console.log("Row " + j + ": " + rows[j]);
-		
-		var columns = rows[j].split("\t");
-		
-		columns.unshift(ids[j]);
-		
-		rows[j] = columns;
-	}
-	
-	return rows;
-}
-
 function printOutput(adFeedbackCollection) {
 	var qaResults = adFeedbackCollection.qaResults;
+	var trailingWhiteSpacePattern = /\s$/;
+	var extraQuotationPattern = /(^")|(\"(?=\"))|("$)/g;
 	
-	var outputString = "<p class=siteSpecification>Site Specification</p>";
-	outputString += "<p class=functionality>Functionality</p>";
-	outputString += "<p class=tracking>Tracking</p><br/>";
+	var outputString = "<p><span class=siteSpecification>Site Specification</span><br />";
+	outputString += "<span class=functionality>Functionality</span><br />";
+	outputString += "<span class=tracking>Tracking</span</p>";
 	
 	for ( var i = 0; i < qaResults.length; i++) {
 		
 		//Ad ID and title
-		outputString += "<p><b>";
+		outputString += "<p>";
 		
 		for (var j = 0; j < qaResults[i].ads.length; j++) {
+			outputString += "<br/>";
 			outputString += qaResults[i].ads[j].id ? qaResults[i].ads[j].id + " - " : "";
 			outputString += qaResults[i].ads[j].title;
 			outputString += qaResults[i].ads[j].format ? " (" + qaResults[i].ads[j].format + ")": "";
 			outputString += "<br/>";
 		}
 		
-		outputString += "</b><ul>";
+		outputString += "<ul>";
 		//
+		
+		
 		
 		//Ad issues
 		if (qaResults[i].issues.length > 0) {
@@ -184,18 +156,18 @@ function printOutput(adFeedbackCollection) {
 				if (qaResults[i].issues[k].additionalNotes) {
 					if(qaResults[i].issues[k].additionalNotes.length > 1) {
 						if (qaResults[i].issues[k].additionalNotes.length <= 10) {
-							outputString += " (" + qaResults[i].issues[k].additionalNotes.replace(/\s$/, "")+ ")";
+							outputString += " (" + qaResults[i].issues[k].additionalNotes.replace(trailingWhiteSpacePattern, "")+ ")";
 						}
 						else {
 							outputString += ". ";
-							outputString += qaResults[i].issues[k].additionalNotes.replace(/(^"|"$)/g, "");
+							outputString += qaResults[i].issues[k].additionalNotes.replace(extraQuotationPattern, "");
 						}
 					}
 				}
 			
 				if (qaResults[i].issues[k].potentialReasons.length > 1) {
 					outputString += "<br/>";
-					outputString += qaResults[i].issues[k].potentialReasons.replace(/(^"|"$)/g, "");
+					outputString += qaResults[i].issues[k].potentialReasons.replace(extraQuotationPattern, "");
 				}
 			
 				outputString += "</li>";

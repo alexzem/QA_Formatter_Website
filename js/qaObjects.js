@@ -1,21 +1,43 @@
-function AdFeedbackCollection(adQAFeedbackArray) {
+function AdFeedbackCollection(inputText) {
 	this.qaResults = [];
 	
-	this.parseFeedback(adQAFeedbackArray);
+	this.parseFeedback(inputText);
 	this.isolateCommonIssues();
 	this.combineLikeIssues();
 }
 
-AdFeedbackCollection.prototype.parseFeedback = function(feedback) {
+AdFeedbackCollection.prototype.parseRawText = function(input) {
+	var splitPattern = /(?:\t)|(?:\n(?=[1-9]\d{6,}))/g
+	var allCells = input.split(splitPattern);
+	var rows = [];
+	var columns = [];
+	
+	var i;
+	for (i = 0; i < allCells.length; i++) {
+		//console.log("Row " + j + ": " + rows[j]);
+		
+		if (i > 0 && i % 8 == 0) {
+			rows.push(columns);
+			columns = [];
+		}
+		
+		columns.push(allCells[i]);
+	}
+	
+	return rows;
+}
+
+AdFeedbackCollection.prototype.parseFeedback = function(input) {
 	var ID = 0;
 	var TITLE = 1;
 	var FORMAT = 2;
 	var CATEGORY = 3;
+	var AD_ELEMENT = 4;
 	var PROBLEMS_ISSUES = 5;
 	var POTENTIAL_REASON = 6;
 	var ADDITIONAL_NOTES = 7;
 		
-	var currentAdFeedback;
+	var feedback = this.parseRawText(input);
 		
 	for (var i = 0; i < feedback.length; i++) {
 		var issue = new Issue(feedback[i][CATEGORY],
