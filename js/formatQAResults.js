@@ -5,14 +5,7 @@ TODO
 * Catch null set error for results array
 * Allow offline use (HTML5 offline storage)
 * Optimize filtering algorithms
-* Clean up updateOutput function
-* Remove 0 from beginning of digits?
-*/
-
-/*
-DONE
-x Save filtering settings in a cookie
-
+* Clean up printOutput function
 */
 
 var COOKIE_EXPIRATION_LIMIT = 360;
@@ -99,12 +92,14 @@ function updateOutput() {
 
 function printOutput(adFeedbackCollection) {
 	var qaResults = adFeedbackCollection.qaResults;
-	var trailingWhiteSpacePattern = /\s$/;
-	var extraQuotationPattern = /(^")|(\"(?=\"))|("$)/g;
+	//var trailingWhiteSpacePattern = /\s$/;
+	//var extraQuotationPattern = /(^")|(\"(?=\"))|("$)/g;
 	
-	var outputString = "<p><span class=siteSpecification>Site Specification</span><br/>";
-	outputString += "<span class=functionality>Functionality</span><br/>";
-	outputString += "<span class=tracking>Tracking</span></p>";
+	if (qaResults.length > 0) {
+		var outputString = "<p><span class=siteSpecification>Site Specification</span><br/>";
+		outputString += "<span class=functionality>Functionality</span><br/>";
+		outputString += "<span class=tracking>Tracking</span></p>";
+	}
 	
 	for ( var i = 0; i < qaResults.length; i++) {
 		
@@ -128,15 +123,19 @@ function printOutput(adFeedbackCollection) {
 				outputString += getCategoryClass(qaResults[i].issues[k].category);
 				outputString += ">";
 				
-				outputString += qaResults[i].issues[k].problems_issues;
+				if (qaResults[i].issues[k].problems_issues.length > 1) {
+					outputString += qaResults[i].issues[k].problems_issues;
+				}
 			
 				if (qaResults[i].issues[k].additionalNotes) {
 					if(qaResults[i].issues[k].additionalNotes.length > 1) {
 						if (qaResults[i].issues[k].additionalNotes.length <= 10) {
-							outputString += " (" + qaResults[i].issues[k].additionalNotes.replace(trailingWhiteSpacePattern, "")+ ")";
+							outputString += " (" + qaResults[i].issues[k].additionalNotes + ")";
 						}
 						else {
-							outputString += ". ";
+							if (qaResults[i].issues[k].problems_issues.length > 1) {
+								outputString += ". ";
+							}
 							outputString += qaResults[i].issues[k].additionalNotes;
 						}
 					}
@@ -158,8 +157,7 @@ function printOutput(adFeedbackCollection) {
 		outputString += "</ul>";
 	}
 	
-	outputString = outputString.replace(extraQuotationPattern, "");
-	outputString = outputString.replace(/Other\. /g, "");
+	outputString = outputString.replace(/[\u201C\u201D\u201E\u201F\u2033\u2036]/g, "\"");
 	
 	qaOutput.innerHTML = outputString;
 }

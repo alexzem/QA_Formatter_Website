@@ -40,17 +40,19 @@ AdFeedbackCollection.prototype.parseFeedback = function(input) {
 	var feedback = this.parseRawText(input);
 		
 	for (var i = 0; i < feedback.length; i++) {
-		var issue = new Issue(feedback[i][CATEGORY],
-								feedback[i][PROBLEMS_ISSUES],
-								feedback[i][POTENTIAL_REASON],
-								feedback[i][ADDITIONAL_NOTES]);
+		var issue = new Issue({category:feedback[i][CATEGORY],
+								problems_issues:feedback[i][PROBLEMS_ISSUES],
+								potentialReasons:feedback[i][POTENTIAL_REASON],
+								additionalNotes:feedback[i][ADDITIONAL_NOTES]});
 			
 			
 		if (i == 0 || feedback[i][ID] != feedback[i - 1][ID]) {
-			var ad = new Ad(feedback[i][ID], feedback[i][TITLE], feedback[i][FORMAT]);
+			var ad = new Ad({id:feedback[i][ID], 
+								title:feedback[i][TITLE], 
+								format:feedback[i][FORMAT]});
 				
-			this.qaResults.push(new AdFeedback([ad],
-											[issue]));
+			this.qaResults.push(new AdFeedback({ads:[ad],
+											issues:[issue]}));
 		}
 		else {
 			this.qaResults[this.qaResults.length - 1].insertIssue(issue);
@@ -87,8 +89,8 @@ AdFeedbackCollection.prototype.isolateCommonIssues = function() {
 		}
 		
 		if (commonIssues.length > 0) {
-			var allAds = new Ad("", "All Ads", "");
-			var commonFeedback = new AdFeedback([allAds], commonIssues);
+			var allAds = new Ad({id:"", title:"All Ads", format:""});
+			var commonFeedback = new AdFeedback({ads:[allAds], issues:commonIssues});
 			this.qaResults.unshift(commonFeedback);
 		}
 	}
@@ -106,9 +108,9 @@ AdFeedbackCollection.prototype.combineLikeIssues = function () {
 	}
 }
 
-function AdFeedback(ads, issues) {
-	this.ads = ads;
-	this.issues = issues;
+function AdFeedback(args) {
+	this.ads = args.ads;
+	this.issues = args.issues;
 }
 
 AdFeedback.prototype.insertAd = function (ad) {
@@ -185,10 +187,10 @@ AdFeedback.prototype.insertIssue = function(issue) {
 	return true;
 }
 
-function Ad(id, title, format) {
-	this.id = id;
-	this.title = title;
-	this.format = format;
+function Ad(args) {
+	this.id = args.id;
+	this.title = args.title;
+	this.format = args.format;
 }
 
 Ad.prototype.isEqualTo = function (ad) {
@@ -197,12 +199,15 @@ Ad.prototype.isEqualTo = function (ad) {
 		this.format == ad.format);
 }
 
-function Issue(category, problems_issues, potentialReasons, additionalNotes) {
-	this.category = category;
-	this.problems_issues = problems_issues;
-	this.potentialReasons = potentialReasons;
-	this.additionalNotes = additionalNotes;
-	
+function Issue(args) {
+	this.category = args.category;
+	this.problems_issues = args.problems_issues.replace(/^Other/, "");
+	this.potentialReasons = args.potentialReasons.replace(/(^")|(\"(?=\"))|("$)/g, "");
+	this.potentialReasons = this.potentialReasons.replace(/\n(?=\*)/g, "<br/>");
+	this.potentialReasons = this.potentialReasons.replace(/\.\n/g, ".<br/>");
+	this.potentialReasons = this.potentialReasons.replace(/\:\n/g, ":<br/>");
+	this.potentialReasons = this.potentialReasons.replace(/;(\s?)\n/g, ";<br/>");
+	this.additionalNotes = args.additionalNotes.replace(/\s$/, "");
 }
 
 Issue.prototype.isEqualTo = function (issue) {
