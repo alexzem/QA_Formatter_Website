@@ -24,6 +24,8 @@ AdFeedbackCollection.prototype.parseRawText = function(input) {
 		columns.push(allCells[i]);
 	}
 	
+	rows.push(columns);
+	
 	return rows;
 }
 

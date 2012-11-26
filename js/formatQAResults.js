@@ -95,8 +95,10 @@ function printOutput(adFeedbackCollection) {
 	//var trailingWhiteSpacePattern = /\s$/;
 	//var extraQuotationPattern = /(^")|(\"(?=\"))|("$)/g;
 	
+	var outputString = "";
+	
 	if (qaResults.length > 0) {
-		var outputString = "<p><span class=siteSpecification>Site Specification</span><br/>";
+		outputString = "<p><span class=siteSpecification>Site Specification</span><br/>";
 		outputString += "<span class=functionality>Functionality</span><br/>";
 		outputString += "<span class=tracking>Tracking</span></p>";
 	}
