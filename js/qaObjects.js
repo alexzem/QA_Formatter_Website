@@ -203,13 +203,29 @@ Ad.prototype.isEqualTo = function (ad) {
 
 function Issue(args) {
 	this.category = args.category;
-	this.problems_issues = args.problems_issues.replace(/^Other/, "");
-	this.potentialReasons = args.potentialReasons.replace(/(^")|(\"(?=\"))|("$)/g, "");
-	this.potentialReasons = this.potentialReasons.replace(/\n(?=\*)/g, "<br/>");
-	this.potentialReasons = this.potentialReasons.replace(/\.\n/g, ".<br/>");
-	this.potentialReasons = this.potentialReasons.replace(/\:\n/g, ":<br/>");
-	this.potentialReasons = this.potentialReasons.replace(/;(\s?)\n/g, ";<br/>");
-	this.additionalNotes = args.additionalNotes.replace(/\s$/, "");
+
+	if (args.problems_issues) {
+		this.problems_issues = args.problems_issues.replace(/^Other/, "");
+	}
+	else {
+		this.problems_issues = "";
+	}
+	if (args.potentialReasons) {
+		this.potentialReasons = args.potentialReasons.replace(/(^")|(\"(?=\"))|("$)/g, "");
+		this.potentialReasons = this.potentialReasons.replace(/\n(?=\*)/g, "<br/>");
+		this.potentialReasons = this.potentialReasons.replace(/\.\n/g, ".<br/>");
+		this.potentialReasons = this.potentialReasons.replace(/\:\n/g, ":<br/>");
+		this.potentialReasons = this.potentialReasons.replace(/;(\s?)\n/g, ";<br/>");
+	}
+	else {
+		this.potentialReasons = "";
+	}
+	if (args.additionalNotes) {
+		this.additionalNotes = args.additionalNotes.replace(/\s$/, "");
+	}
+	else {
+		this.additionalNotes = "";
+	}
 }
 
 Issue.prototype.isEqualTo = function (issue) {
