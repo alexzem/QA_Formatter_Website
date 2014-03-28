@@ -14,8 +14,6 @@ AdFeedbackCollection.prototype.parseRawText = function(input) {
 	
 	var i;
 	for (i = 0; i < allCells.length; i++) {
-		//console.log("Row " + j + ": " + rows[j]);
-		
 		if (i > 0 && i % 8 === 0) {
 			rows.push(columns);
 			columns = [];

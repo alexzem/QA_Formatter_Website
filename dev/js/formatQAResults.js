@@ -20,39 +20,33 @@ var checkForInputIntervalID;
 window.onload = init;
 
 function init() {
-	//console.log("init");
 	setGlobalVariables();
 	addEventListeners();
 }
 
 function setGlobalVariables() {
-	//console.log("Set global variables");
 	qaInput = document.getElementById("qaInput");
 	qaOutput = document.getElementById("qaOutput");
 	selectOutputButton = document.getElementById("selectOutputButton");
 }
 
 function addEventListeners() {
-	//console.log("Add event listeners");
-	qaInput.onblur = stopCheckingfForNewInput;
-	qaInput.onfocus = startCheckingForNewInput;
+	qaInput.addEventListener("blur", stopCheckingfForNewInput);
+	qaInput.addEventListener("focus", startCheckingForNewInput);
+	selectOutputButton.addEventListener("click", selectOutputText);
 }
 
 function startCheckingForNewInput() {
-	//console.log("Start checking for new input");
-	
 	if (checkForInputIntervalID) clearInterval(checkForInputIntervalID);
 	checkForInputIntervalID = setInterval(checkForNewInput, 250);
 }
 
 function stopCheckingfForNewInput() {
-	//console.log("Stop checking for new input");
 	clearInterval(checkForInputIntervalID);
 	updateOutput();
 }
 
 function checkForNewInput() {
-	//console.log("Check for new input");
 	if (lastInput != getInput()) {
 		lastInput = getInput();
 		updateOutput();
@@ -60,13 +54,10 @@ function checkForNewInput() {
 }
 
 function getInput() {
-	//console.log("Get input");
 	return qaInput.value;
 }
 
 function getOutput() {
-	//console.log("Get output");
-	
 	var output = unescape(qaOutput.innerHTML);
 	return output;
 }
@@ -82,8 +73,6 @@ function isInt(value){
 }
 
 function updateOutput() {
-	//console.log("Update output");
-	
 	var output;
 	
 	var adFeedbackCollection = new AdFeedbackCollection(getInput());
@@ -200,7 +189,5 @@ function ascendingNumericalSort(a, b) {
 }
 
 function selectOutputText() {
-	//console.log("Select output text");
-	qaOutput.focus();
-	qaOutput.select();
+	selectText('qaOutput');
 }

@@ -1,74 +1,137 @@
-@import 'reset';
+@import 'normalize';
+@import 'sizmek';
 @import 'qaResults';
 
-body {
-	background-image: url('../img/background.jpg');
-	font-family: Helvetica, Arial, sans-serif;
-	font-size: 100%;
-	line-height: 125%;
-	margin: 25px;
-	width: 800px;
+/* NEW */
+
+html {
+	background: {
+		color: $sizmek-dark-blue;
+	}
+	color: $sizmek-gray;
+	font: $sizmek-font;
+	font: {
+		size: 100%;
+	}
+
 }
 
-h1, h2 {
-	color: #f8981d;
-	font-weight: bold;
+body {
+	margin: 0 auto;
+	max-width: 600px;
+	min-width: 300px;
+	width: 80%;
 }
 
 h1 {
-	font-size: 1.5em;
-	margin-bottom: 15px;
+	color: $sizmek-yellow;
+	font: {
+		size: 2em;
+		weight: normal;
+	}
 }
 
-h2 {
-	font-size: 1.10em;
-	margin-bottom: 5px;
-	margin-top: 15px;
-}
-
-ul li {
-	list-style-position: outside;
-	list-style-type: disc;
-	margin-left: 40px;
-}
-
-textarea#qaInput {
-	border: solid 1px #888888;
-	height: 200px;
-	margin-top: 10px;
-	margin-bottom: 10px;
-	padding-left: 5px;
+textArea {
+	font: inherit;
+	height: 5em;
+	margin: {
+		bottom: 1em;
+	}
+	overflow: auto;
+	padding: 5px;
+	resize: vertical;
 	width: 100%;
 }
 
-button#selectOutputButton {
-    background-color:#f8981d; 
-	border: 1px solid #f88854;
-	color: #ffffff;
-	cursor: pointer;
-	font-weight: bold;
-	margin-bottom: 5px;
-	margin-top: 5px;
-	height: 20px;
-	width: 100px;
-	text-align:center; 
+textArea, input, select {
+	background: {
+		color: $sizmek-gray;
+	}
+	border: none;
+	color: $sizmek-dark-blue;
+	outline: {
+		color: $sizmek-yellow;
+	}
 }
 
-button#selectOutputButton:hover { 
-	background-color:#f26631; 
+::-webkit-input-placeholder {
+   color: $sizmek-white;
 }
 
-button#selectOutputButton:active { 
-	background-color:#f8981d; 
+:-moz-placeholder { /* Firefox 18- */
+   color: $sizmek-white;  
 }
 
-div#qaOutput {
-	background-color: #FFFFFF;
-	border: solid 1px #888888;
-	padding: 10px;
+::-moz-placeholder {  /* Firefox 19+ */
+   color: $sizmek-white;  
 }
 
-div#footer {
-	color: #888888;
-	font-size: .75em;
+:-ms-input-placeholder {  
+   color: $sizmek-white;  
+}
+
+tr {
+	height: 1.8em;
+}
+
+label {
+	padding: {
+		right: 1em;
+	}
+	text-align: left;
+}
+
+input, select {
+	margin: {
+		bottom: 0.3em;
+	}
+}
+
+input[type="text"] {
+	width: 30px;
+}
+
+select {
+	width: 120px;
+}
+
+button {
+	background-color: $sizmek-blue; 
+	border: none;
+	color: $sizmek-white;
+	padding: 0.5em;
+	margin: {
+		bottom: 0.5em;
+	}
+	outline: none;
+	text-align:center;
+}
+
+button:hover, button.zeroclipboard-is-hover { 
+	color: $sizmek-yellow; 
+}
+
+button:active, button.zeroclipboard-is-active { 
+	background-color: lighten($sizmek-blue, 10%); 
+}
+
+button#selectButton {
+	display: none;
+}
+
+footer {
+	font: {
+		size: 0.8em;
+	}
+}
+
+a {
+	color: $sizmek-light-violet;
+	text: {
+		decoration: none;
+	}
+}
+
+a:visited {
+	color: darken($sizmek-light-violet, 10%);
 }

@@ -1,7 +1,5 @@
 function setCookie(c_name,value,exdays)
 {
-	//console.log("Setting cookie " + c_name + " to value " + value + " for " + exdays + "days");
-	
 	var exdate = new Date();
 	exdate.setDate(exdate.getDate() + exdays);
 	var c_value = escape(value) + ((exdays == null) ? "" : "; expires=" + exdate.toUTCString());
@@ -10,8 +8,6 @@ function setCookie(c_name,value,exdays)
 
 function getCookie(c_name)
 {
-	//console.log("Getting cookie " + c_name);
-	
 	var i,x,y,ARRcookies=document.cookie.split(";");
 	
 	for (i=0;i<ARRcookies.length;i++)

@@ -6,23 +6,22 @@
 		<link rel="stylesheet" type="text/css" href="css/style.css"></link>
 	</head>
 	<body>
-		<h1>QA Formatter</h1>
-		<p>Paste the QA results from Excel below. </p> 
-		<p><a href="http://screencast.com/t/ZFsjWGud" target="_blank">Watch Demo</a></p>
-		<div id="formContainer">
-			<form>
-				<textarea id="qaInput"></textarea>
-			</form>
-		</div>
-		<h2>QA Output</h2>
-		<button id="selectOutputButton" type="button" onclick="selectText('qaOutput');">Select Output</button>
+		<h1>QA FORMATTER</h1>
+		<p><a href="http://screencast.com/t/ZFsjWGud" target="_blank">Watch demo</a></p>
+		<textarea id="qaInput" title="Paste the QA results from Excel here" placeholder="Paste the QA results from Excel here"></textarea>
+		<button id="clipboardButton" data-clipboard-target="qaOutput">COPY</button>
+		<button id="selectOutputButton">SELECT</button>
 		<div id="qaOutput">The output will appear here.</div>
-		<div id="footer">
-			<p>Please send any feedback to <a href="mailto::bill.cryer@mediamind.com">bill.cryer@mediamind.com</a>.</p>
-		</div>
-		<script src="js/cookieAccess.js" type="text/javascript"></script>
+		<footer>Internet Explorer 8 and below are not officially supported. If you have any problems, you may use the <a href="/BillC/WebUtilities/QAFormatter/old">old version of the site.</a> Please send any issues or feedback to <a href="mailto::bill.cryer@sizmek.com" target="_blank">bill.cryer@sizmek.com,</a> or <a href="https://github.com/WDCryer/QA_Formatter_Website/issues?state=open" target="_blank">report them on GitHub.</a>
+		</footer>
+		<!--[if lt IE 9]>
+			<script src="js/addEventListener.js" type="text/javascript"></script>
+		<![endif]-->
+		<!-- build:js js/script.js -->
+		<script src="js/modernizr.js" type="text/javascript"></script>
 		<script src="js/ZeroClipboard.js" type="text/javascript"></script>
 		<script src="js/qaObjects.js" type="text/javascript"></script>
 		<script src="js/formatQAResults.js" type="text/javascript"></script>
+		<!-- endbuild -->
 	</body>
 </html>
