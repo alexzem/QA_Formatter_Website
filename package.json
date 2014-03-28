@@ -1,0 +1,38 @@
+{
+  "name": "QA_Formatter_Website",
+  "version": "0.0.0",
+  "description": "",
+  "main": "gulpfile.js",
+  "dependencies": {
+    "gulp": "~3.6.0",
+    "gulp-concat": "~2.2.0",
+    "gulp-jshint": "~1.5.1",
+    "gulp-minify-css": "~0.3.0",
+    "gulp-minify-html": "~0.1.2",
+    "gulp-sass": "~0.7.1",
+    "gulp-uglify": "~0.2.1",
+    "gulp-usemin": "~0.3.3"
+  },
+  "devDependencies": {
+    "gulp-concat": "^2.2.0",
+    "gulp-jshint": "^1.5.1",
+    "gulp-minify-css": "^0.3.0",
+    "gulp-minify-html": "^0.1.2",
+    "gulp-sass": "^0.7.1",
+    "gulp-uglify": "^0.2.1",
+    "gulp-usemin": "^0.3.3"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/WDCryer/QA_Formatter_Website.git"
+  },
+  "author": "William Cryer",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/WDCryer/QA_Formatter_Website/issues"
+  },
+  "homepage": "https://github.com/WDCryer/QA_Formatter_Website"
+}

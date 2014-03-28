@@ -1,14 +1,10 @@
 /*
-TODO
-* Combine ads with the exact same issues
-* Pull out any issues that are common to all ads and put them at the top.
+* TODO
 * Catch null set error for results array
 * Allow offline use (HTML5 offline storage)
 * Optimize filtering algorithms
 * Clean up printOutput function
 */
-
-var COOKIE_EXPIRATION_LIMIT = 360;
 
 var clipboard;
 var qaInput;
@@ -17,7 +13,7 @@ var selectOutputButton;
 var lastInput = "";
 var checkForInputIntervalID;
 
-window.onload = init;
+window.addEventListener("load", init);
 
 function init() {
 	setGlobalVariables();
@@ -31,13 +27,20 @@ function setGlobalVariables() {
 }
 
 function addEventListeners() {
-	qaInput.addEventListener("blur", stopCheckingfForNewInput);
-	qaInput.addEventListener("focus", startCheckingForNewInput);
+	qaInput.addEventListener("keyup", updateOutput);
+	qaInput.addEventListener("blur", updateOutput);
+	qaInput.addEventListener("paste", function() {
+		setTimeout(updateOutput, 100);
+	});
+	/*qaInput.addEventListener("blur", stopCheckingfForNewInput);
+	qaInput.addEventListener("focus", startCheckingForNewInput);*/
 	selectOutputButton.addEventListener("click", selectOutputText);
 }
 
 function startCheckingForNewInput() {
-	if (checkForInputIntervalID) clearInterval(checkForInputIntervalID);
+	if (checkForInputIntervalID) {
+		clearInterval(checkForInputIntervalID);
+	}
 	checkForInputIntervalID = setInterval(checkForNewInput, 250);
 }
 
