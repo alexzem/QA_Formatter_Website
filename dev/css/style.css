@@ -1,0 +1,108 @@
+/**
+ * Eric Meyer's Reset CSS v2.0 (http://meyerweb.com/eric/tools/css/reset/)
+ * http://cssreset.com
+ */
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline; }
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
+  display: block; }
+
+body {
+  line-height: 1; }
+
+ol, ul {
+  list-style: none; }
+
+blockquote, q {
+  quotes: none; }
+
+blockquote:before, blockquote:after, q:before, q:after {
+  content: '';
+  content: none; }
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0; }
+
+.siteSpecification {
+  color: #0070c0; }
+
+.functionality {
+  color: #e36c09; }
+
+.tracking {
+  color: #ff0000; }
+
+.customInteractions {
+  color: #e36c09; }
+
+.browserIssue {
+  color: #00b050; }
+
+body {
+  background-image: url('../img/background.jpg');
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 100%;
+  line-height: 125%;
+  margin: 25px;
+  width: 800px; }
+
+h1, h2 {
+  color: #f8981d;
+  font-weight: bold; }
+
+h1 {
+  font-size: 1.5em;
+  margin-bottom: 15px; }
+
+h2 {
+  font-size: 1.1em;
+  margin-bottom: 5px;
+  margin-top: 15px; }
+
+ul li {
+  list-style-position: outside;
+  list-style-type: disc;
+  margin-left: 40px; }
+
+textarea#qaInput {
+  border: solid 1px #888888;
+  height: 200px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding-left: 5px;
+  width: 100%; }
+
+button#selectOutputButton {
+  background-color: #f8981d;
+  border: 1px solid #f88854;
+  color: #ffffff;
+  cursor: pointer;
+  font-weight: bold;
+  margin-bottom: 5px;
+  margin-top: 5px;
+  height: 20px;
+  width: 100px;
+  text-align: center; }
+
+button#selectOutputButton:hover {
+  background-color: #f26631; }
+
+button#selectOutputButton:active {
+  background-color: #f8981d; }
+
+div#qaOutput {
+  background-color: #FFFFFF;
+  border: solid 1px #888888;
+  padding: 10px; }
+
+div#footer {
+  color: #888888;
+  font-size: 0.75em; }
