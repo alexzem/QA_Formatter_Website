@@ -1,15 +1,6 @@
-/*
-* TODO
-* Catch null set error for results array
-* Allow offline use (HTML5 offline storage)
-* Optimize filtering algorithms
-* Clean up printOutput function
-*/
-
-var clipboard;
 var qaInput;
 var qaOutput;
-var selectOutputButton;
+var defaultOutput;
 var lastInput = "";
 var checkForInputIntervalID;
 
@@ -23,30 +14,26 @@ function init() {
 function setGlobalVariables() {
 	qaInput = document.getElementById("qaInput");
 	qaOutput = document.getElementById("qaOutput");
-	selectOutputButton = document.getElementById("selectOutputButton");
+	defaultOutput = qaOutput.innerHTML;
 }
 
 function addEventListeners() {
+	var clearButton = document.getElementById("clearButton");
+	var selectButton = document.getElementById("selectButton");
+
+	clearButton.addEventListener("click", resetQAInputText);
+	selectButton.addEventListener("click", selectOutputText);
+
 	qaInput.addEventListener("keyup", updateOutput);
 	qaInput.addEventListener("blur", updateOutput);
 	qaInput.addEventListener("paste", function() {
 		setTimeout(updateOutput, 100);
 	});
-	/*qaInput.addEventListener("blur", stopCheckingfForNewInput);
-	qaInput.addEventListener("focus", startCheckingForNewInput);*/
-	selectOutputButton.addEventListener("click", selectOutputText);
 }
 
-function startCheckingForNewInput() {
-	if (checkForInputIntervalID) {
-		clearInterval(checkForInputIntervalID);
-	}
-	checkForInputIntervalID = setInterval(checkForNewInput, 250);
-}
-
-function stopCheckingfForNewInput() {
-	clearInterval(checkForInputIntervalID);
-	updateOutput();
+function resetQAInputText(event) {
+	setInput("");
+	setOutput(defaultOutput);
 }
 
 function checkForNewInput() {
@@ -60,9 +47,17 @@ function getInput() {
 	return qaInput.value;
 }
 
+function setInput(input) {
+	qaInput.value = input;
+}
+
 function getOutput() {
 	var output = unescape(qaOutput.innerHTML);
 	return output;
+}
+
+function setOutput(output) {
+	qaOutput.innerHTML = output;
 }
 
 function isInt(value){ 
@@ -76,10 +71,21 @@ function isInt(value){
 }
 
 function updateOutput() {
-	var output;
-	
-	var adFeedbackCollection = new AdFeedbackCollection(getInput());
-	printOutput(adFeedbackCollection);
+	if (!isStringBlank(getInput())) {
+		var output;
+
+		var adFeedbackCollection = new AdFeedbackCollection(getInput());
+		printOutput(adFeedbackCollection);
+	}
+	else {
+		qaOutput.innerHTML = defaultOutput;
+	}
+}
+
+function isStringBlank(string) {
+	var whiteSpace = /^\s+$/;
+
+	return whiteSpace.test(string) || string.length === 0 || string === "";
 }
 
 function printOutput(adFeedbackCollection) {
@@ -170,18 +176,17 @@ function getCategoryClass(category) {
 }
 
 function selectText(element) {
-    var text = document.getElementById(element);
     var range;
     var selection;
        
-    if (document.body.createTextRange) { //ms
+    if (document.body.createTextRange) {
         range = document.body.createTextRange();
-        range.moveToElementText(text);
+        range.moveToElementText(element);
         range.select();
-    } else if (window.getSelection) { //all others
+    } else if (window.getSelection) {
         selection = window.getSelection();        
         range = document.createRange();
-        range.selectNodeContents(text);
+        range.selectNodeContents(element);
         selection.removeAllRanges();
         selection.addRange(range);
     }
@@ -192,5 +197,5 @@ function ascendingNumericalSort(a, b) {
 }
 
 function selectOutputText() {
-	selectText('qaOutput');
+	selectText(qaOutput);
 }

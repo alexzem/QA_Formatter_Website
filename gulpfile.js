@@ -23,9 +23,6 @@ gulp.task('js', ['lint'], function() {
 		.pipe(uglify())
 		.pipe(gulp.dest('./prod/js'));
 
-	gulp.src('./dev/swf/ZeroClipboard.swf')
-		.pipe(gulp.dest('./prod/swf'));
-
 	gulp.src('./dev/js/addEventListener.js')
 		.pipe(gulp.dest('./prod/js'));
 });
@@ -57,6 +54,13 @@ gulp.task('html', function() {
 gulp.task('fonts', function() {
 	gulp.src('./dev/fonts/*')
 		.pipe(gulp.dest('./prod/fonts'));
+});
+
+gulp.task("watch", function() {
+	gulp.watch('scss/*.scss', ['sass']);
+	gulp.watch(['./dev/**/*.js', ], ['js']);
+	gulp.watch(['./dev/**/*.css', ], ['css']);
+	gulp.watch(['./dev/**/*.html', ], ['html', 'js']);
 });
 
 gulp.task('build', ['html', 'css', 'js', 'fonts']);
