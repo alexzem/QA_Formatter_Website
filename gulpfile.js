@@ -12,13 +12,13 @@ gulp.task('default', function() {
 });
 
 gulp.task('lint', function() {
-	gulp.src(['gulpfile.js', './dev/js/formatQAResults.js', './dev/js/qaObjects.js'])
+	return gulp.src(['gulpfile.js', './dev/js/formatQAResults.js', './dev/js/qaObjects.js'])
 		.pipe(jshint())
 		.pipe(jshint.reporter('default'));
 });
 
 gulp.task('js', ['lint'], function() {
-	gulp.src(['./dev/js/modernizr.js', './dev/js/ZeroClipboard.js', './dev/js/qaObjects.js', './dev/js/formatQAResults.js'])
+	gulp.src('./dev/js/*')
 		.pipe(concat('script.js'))
 		.pipe(uglify())
 		.pipe(gulp.dest('./prod/js'));
@@ -28,20 +28,20 @@ gulp.task('js', ['lint'], function() {
 });
 
 gulp.task('sass', function() {
-	gulp.src('./scss/style.scss')
+	return gulp.src('./scss/style.scss')
 		.pipe(sass({errLogToConsole: true}))
 		.pipe(gulp.dest('./dev/css'));
 });
 
 gulp.task('css', ['sass'], function() {
-	gulp.src('./dev/css/*.css')
+	return gulp.src('./dev/css/*.css')
 		.pipe(concat('style.css'))
 		.pipe(minifyCSS())
 		.pipe(gulp.dest('./prod/css'));
 });
 
 gulp.task('html', function() {
-	gulp.src('./dev/index.html')
+	return gulp.src('./dev/index.html')
 		.pipe(usemin({
 			js: [uglify()]
 		}))
@@ -52,7 +52,7 @@ gulp.task('html', function() {
 });
 
 gulp.task('fonts', function() {
-	gulp.src('./dev/fonts/*')
+	return gulp.src('./dev/fonts/*')
 		.pipe(gulp.dest('./prod/fonts'));
 });
 
