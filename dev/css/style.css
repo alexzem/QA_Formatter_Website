@@ -419,7 +419,7 @@ html {
 
 body {
   margin: 0 auto;
-  max-width: 600px;
+  max-width: 800px;
   min-width: 300px;
   width: 80%; }
 
@@ -466,7 +466,7 @@ textArea, input, select {
   margin: 0; }
 
 ul {
-  margin: 0; }
+  margin: 0 0 0 2em; }
 
 button {
   background-color: #0068ff;
@@ -493,3 +493,6 @@ a {
 
 a:visited {
   color: #837bfa; }
+
+.bold {
+  font-weight: bold; }

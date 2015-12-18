@@ -42,6 +42,7 @@ AdFeedbackCollection.prototype.parseFeedback = function(input) {
 	for (var i = 0; i < feedback.length; i++) {
 		var issue = new Issue({category:feedback[i][CATEGORY],
 								problems_issues:feedback[i][PROBLEMS_ISSUES],
+								ad_element:feedback[i][AD_ELEMENT],
 								potentialReasons:feedback[i][POTENTIAL_REASON],
 								additionalNotes:feedback[i][ADDITIONAL_NOTES]});
 			
@@ -76,9 +77,7 @@ AdFeedbackCollection.prototype.isolateCommonIssues = function() {
 			}
 			
 			if (doAllAdsHaveIssue) {
-				//if (commonIssues.indexOf(currentIssue) < 0) {
-					commonIssues.push(currentIssue);
-				//}
+				commonIssues.push(currentIssue);
 			}
 		}
 		
@@ -202,12 +201,20 @@ Ad.prototype.isEqualTo = function (ad) {
 function Issue(args) {
 	this.category = args.category;
 
+	if (args.ad_element) {
+		this.ad_element = args.ad_element;
+	}
+	else {
+		this.ad_element = "";
+	}
+
 	if (args.problems_issues) {
 		this.problems_issues = args.problems_issues.replace(/^Other/, "");
 	}
 	else {
 		this.problems_issues = "";
 	}
+
 	if (args.potentialReasons) {
 		this.potentialReasons = args.potentialReasons.replace(/(^")|(\"(?=\"))|("$)/g, "");
 		this.potentialReasons = this.potentialReasons.replace(/\n(?=\*)/g, "<br/>");
@@ -218,6 +225,7 @@ function Issue(args) {
 	else {
 		this.potentialReasons = "";
 	}
+
 	if (args.additionalNotes) {
 		this.additionalNotes = args.additionalNotes.replace(/\s$/, "");
 	}
@@ -228,6 +236,7 @@ function Issue(args) {
 
 Issue.prototype.isEqualTo = function (issue) {
 	return (this.category == issue.category &&
+		this.ad_element == issue.ad_element &&
 		this.problems_issues == issue.problems_issues &&
 		this.potentialReasons == issue.potentialReasons &&
 		this.additionalNotes == issue.additionalNotes);

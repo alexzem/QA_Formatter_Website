@@ -16,7 +16,7 @@ html {
 
 body {
 	margin: 0 auto;
-	max-width: 600px;
+	max-width: 800px;
 	min-width: 300px;
 	width: 80%;
 }
@@ -81,8 +81,8 @@ textArea, input, select {
 }
 
 ul {
-	margin: 0;
-}
+	margin: 0 0 0 2em;
+} 
 
 button {
 	background-color: $sizmek-blue; 
@@ -120,4 +120,8 @@ a {
 
 a:visited {
 	color: darken($sizmek-light-violet, 10%);
+}
+
+.bold {
+	font-weight: bold;
 }

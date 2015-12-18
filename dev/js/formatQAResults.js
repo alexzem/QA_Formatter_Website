@@ -104,10 +104,9 @@ function printOutput(adFeedbackCollection) {
 	for ( var i = 0; i < qaResults.length; i++) {
 		
 		//Ad ID and title
-		outputString += "<br/><p>";
+		outputString += "<br/><p class='bold'>";
 		
 		for (var j = 0; j < qaResults[i].ads.length; j++) {
-			//outputString += "<br/>";
 			outputString += qaResults[i].ads[j].id ? qaResults[i].ads[j].id + " - " : "";
 			outputString += qaResults[i].ads[j].title;
 			outputString += qaResults[i].ads[j].format ? " (" + qaResults[i].ads[j].format + ")": "";
@@ -119,31 +118,40 @@ function printOutput(adFeedbackCollection) {
 		//Ad issues
 		if (qaResults[i].issues.length > 0) {
 			for (var k = 0; k < qaResults[i].issues.length; k++) {
+				var issue = qaResults[i].issues[k];
+				var categoryClass = getCategoryClass(issue.category);
+
 				outputString += "<li class=";
-				outputString += getCategoryClass(qaResults[i].issues[k].category);
+				outputString += categoryClass;
 				outputString += ">";
-				
-				if (qaResults[i].issues[k].problems_issues.length > 1) {
-					outputString += qaResults[i].issues[k].problems_issues;
+
+				if (issue.problems_issues.length > 1) {
+					var isNotStandardCategory = categoryClass.length === 0;
+
+					if (isNotStandardCategory && issue.ad_element.length > 1) {
+						outputString += issue.ad_element + " - ";
+					}
+
+					outputString += issue.problems_issues;
 				}
 			
-				if (qaResults[i].issues[k].additionalNotes) {
-					if(qaResults[i].issues[k].additionalNotes.length > 1) {
-						if (qaResults[i].issues[k].additionalNotes.length <= 10) {
-							outputString += " (" + qaResults[i].issues[k].additionalNotes + ")";
+				if (issue.additionalNotes) {
+					if(issue.additionalNotes.length > 1) {
+						if (issue.additionalNotes.length <= 10) {
+							outputString += " (" + issue.additionalNotes + ")";
 						}
 						else {
-							if (qaResults[i].issues[k].problems_issues.length > 1) {
+							if (issue.problems_issues.length > 1) {
 								outputString += ". ";
 							}
-							outputString += qaResults[i].issues[k].additionalNotes;
+							outputString += issue.additionalNotes;
 						}
 					}
 				}
 			
-				if (qaResults[i].issues[k].potentialReasons.length > 1) {
+				if (issue.potentialReasons.length > 1) {
 					outputString += "<br/>";
-					outputString += qaResults[i].issues[k].potentialReasons;
+					outputString += issue.potentialReasons;
 				}
 			
 				outputString += "</li>";
