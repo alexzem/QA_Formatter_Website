@@ -126,13 +126,14 @@ function printOutput(adFeedbackCollection) {
 				outputString += ">";
 
 				if (issue.problems_issues.length > 1) {
+					outputString += issue.problems_issues;
+
 					var isNotStandardCategory = categoryClass.length === 0;
 
 					if (isNotStandardCategory && issue.ad_element.length > 1) {
-						outputString += issue.ad_element + " - ";
+						outputString += " (" + issue.ad_element + ") ";
 					}
 
-					outputString += issue.problems_issues;
 				}
 			
 				if (issue.additionalNotes) {
