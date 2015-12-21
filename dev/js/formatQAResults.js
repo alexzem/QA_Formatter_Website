@@ -37,7 +37,7 @@ function resetQAInputText(event) {
 }
 
 function checkForNewInput() {
-	if (lastInput != getInput()) {
+	if (lastInput !== getInput()) {
 		lastInput = getInput();
 		updateOutput();
 	}
@@ -107,9 +107,11 @@ function printOutput(adFeedbackCollection) {
 		outputString += "<br/><p class='bold'>";
 		
 		for (var j = 0; j < qaResults[i].ads.length; j++) {
-			outputString += qaResults[i].ads[j].id ? qaResults[i].ads[j].id + " - " : "";
-			outputString += qaResults[i].ads[j].title;
-			outputString += qaResults[i].ads[j].format ? " (" + qaResults[i].ads[j].format + ")": "";
+			var ad = qaResults[i].ads[j];
+	
+			outputString += ad.id ? ad.id + " - " : "";
+			outputString += ad.title;
+			outputString += ad.format ? " (" + ad.format + ")": "";
 			outputString += "</p>";
 		}
 		
@@ -125,13 +127,13 @@ function printOutput(adFeedbackCollection) {
 				outputString += categoryClass;
 				outputString += ">";
 
-				if (issue.problems_issues.length > 1) {
-					outputString += issue.problems_issues;
+				if (issue.problemsIssues.length > 1) {
+					outputString += issue.problemsIssues;
 
 					var isNotStandardCategory = categoryClass.length === 0;
 
-					if (isNotStandardCategory && issue.ad_element.length > 1) {
-						outputString += " (" + issue.ad_element + ") ";
+					if (isNotStandardCategory && issue.adElements.length > 0) {
+						outputString += " [" + issue.adElements.join(', ') + "]";
 					}
 
 				}
@@ -142,17 +144,17 @@ function printOutput(adFeedbackCollection) {
 							outputString += " (" + issue.additionalNotes + ")";
 						}
 						else {
-							if (issue.problems_issues.length > 1) {
-								outputString += ". ";
+							if (issue.problemsIssues.length > 1) {
+								outputString += " - ";
 							}
 							outputString += issue.additionalNotes;
 						}
 					}
 				}
 			
-				if (issue.potentialReasons.length > 1) {
+				if (issue.testPage.length > 1) {
 					outputString += "<br/>";
-					outputString += issue.potentialReasons;
+					outputString += issue.testPage;
 				}
 			
 				outputString += "</li>";
@@ -198,8 +200,7 @@ function selectText(element) {
         range.selectNodeContents(element);
         selection.removeAllRanges();
         selection.addRange(range);
-    }
-}
+    } }
 
 function ascendingNumericalSort(a, b) {
 	return Number(a) - Number(b);

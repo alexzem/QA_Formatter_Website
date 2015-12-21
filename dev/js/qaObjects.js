@@ -34,16 +34,16 @@ AdFeedbackCollection.prototype.parseFeedback = function(input) {
 	var CATEGORY = 3;
 	var AD_ELEMENT = 4;
 	var PROBLEMS_ISSUES = 5;
-	var POTENTIAL_REASON = 6;
+	var TEST_PAGE = 6;
 	var ADDITIONAL_NOTES = 7;
 		
 	var feedback = this.parseRawText(input);
 		
 	for (var i = 0; i < feedback.length; i++) {
 		var issue = new Issue({category:feedback[i][CATEGORY],
-								problems_issues:feedback[i][PROBLEMS_ISSUES],
-								ad_element:feedback[i][AD_ELEMENT],
-								potentialReasons:feedback[i][POTENTIAL_REASON],
+								problemsIssues:feedback[i][PROBLEMS_ISSUES],
+								adElement:feedback[i][AD_ELEMENT],
+								testPage:feedback[i][TEST_PAGE],
 								additionalNotes:feedback[i][ADDITIONAL_NOTES]});
 			
 			
@@ -104,6 +104,8 @@ AdFeedbackCollection.prototype.combineLikeIssues = function () {
 				j--;
 			}
 		}
+
+		this.qaResults[i].combineLikeIssues();
 	}
 };
 
@@ -172,7 +174,7 @@ AdFeedback.prototype.insertIssue = function(issue) {
 };
 	
 AdFeedback.prototype.hasSameIssuesAs = function (adFeedback) {
-	if (this.issues.length == adFeedback.issues.length) {
+	if (this.issues.length === adFeedback.issues.length) {
 		for (var i = 0; i < this.issues.length; i++) {
 			if (!adFeedback.hasIssue(this.issues[i])) {
 				return false;
@@ -186,6 +188,18 @@ AdFeedback.prototype.hasSameIssuesAs = function (adFeedback) {
 	return true;
 };
 
+AdFeedback.prototype.combineLikeIssues = function() {
+	for (var i = 0; i < this.issues.length - 1; i++) {
+		for (var j = i + 1; j < this.issues.length; j++) {
+			if (this.issues[i].isSimilarTo(this.issues[j])) {
+				this.issues[i].insertAdElements(this.issues[j].adElements);
+				this.issues.splice(j, 1);
+				j--;
+			}	
+		}
+	}
+};
+
 function Ad(args) {
 	this.id = args.id;
 	this.title = args.title;
@@ -193,37 +207,33 @@ function Ad(args) {
 }
 
 Ad.prototype.isEqualTo = function (ad) {
-	return (this.id == ad.id &&
-		this.title == ad.title &&
-		this.format == ad.format);
+	return (this.id === ad.id &&
+		this.title === ad.title &&
+		this.format === ad.format);
 };
 
 function Issue(args) {
 	this.category = args.category;
 
-	if (args.ad_element) {
-		this.ad_element = args.ad_element;
+	if (args.adElement) {
+		this.adElements = [args.adElement];
 	}
 	else {
-		this.ad_element = "";
+		this.adElements = "";
 	}
 
-	if (args.problems_issues) {
-		this.problems_issues = args.problems_issues.replace(/^Other/, "");
+	if (args.problemsIssues) {
+		this.problemsIssues = args.problemsIssues.replace(/^Other/, "");
 	}
 	else {
-		this.problems_issues = "";
+		this.problemsIssues = "";
 	}
 
-	if (args.potentialReasons) {
-		this.potentialReasons = args.potentialReasons.replace(/(^")|(\"(?=\"))|("$)/g, "");
-		this.potentialReasons = this.potentialReasons.replace(/\n(?=\*)/g, "<br/>");
-		this.potentialReasons = this.potentialReasons.replace(/\.\n/g, ".<br/>");
-		this.potentialReasons = this.potentialReasons.replace(/\:\n/g, ":<br/>");
-		this.potentialReasons = this.potentialReasons.replace(/;(\s?)\n/g, ";<br/>");
+	if (args.testPage) {
+		this.testPage = args.testPage;
 	}
 	else {
-		this.potentialReasons = "";
+		this.testPage = "";
 	}
 
 	if (args.additionalNotes) {
@@ -234,10 +244,20 @@ function Issue(args) {
 	}
 }
 
+Issue.prototype.insertAdElements = function (adElements) {
+	if(adElements && adElements.length > 0) {
+		this.adElements.push(adElements);
+	}	
+}
+
 Issue.prototype.isEqualTo = function (issue) {
-	return (this.category == issue.category &&
-		this.ad_element == issue.ad_element &&
-		this.problems_issues == issue.problems_issues &&
-		this.potentialReasons == issue.potentialReasons &&
-		this.additionalNotes == issue.additionalNotes);
+	return (this.adElements === issue.adElements &&
+		this.isSimilarTo(issue));
+};
+
+Issue.prototype.isSimilarTo = function (issue) {
+	return (this.category === issue.category &&
+		this.problemsIssues === issue.problemsIssues &&
+		this.testPage === issue.testPage &&
+		this.additionalNotes === issue.additionalNotes);
 };
