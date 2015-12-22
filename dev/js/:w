@@ -7,13 +7,13 @@ function AdFeedbackCollection(inputText) {
 }
 
 AdFeedbackCollection.prototype = {
-	parseRawText: function (input) {
+	parseRawText: function(input) {
 		var splitPattern = /(?:\t)|(?:\n(?=[1-9]\d{6,}))/g;
 		var allCells = input.split(splitPattern);
 		var rows = [];
 		var columns = [];
 		
-		allCells.forEach(function (cell, i) {
+		allCells.forEach(function(cell, i) {
 			if (i > 0 && i % 8 === 0) {
 				rows.push(columns);
 				columns = [];
@@ -27,7 +27,7 @@ AdFeedbackCollection.prototype = {
 		return rows;
 	},
 
-	parseFeedback: function (input) {
+	parseFeedback: function(input) {
 		var ID = 0;
 		var TITLE = 1;
 		var FORMAT = 2;
@@ -39,7 +39,7 @@ AdFeedbackCollection.prototype = {
 			
 		var feedbacks = this.parseRawText(input);
 			
-		feedbacks.forEach(function (feedback, i, feedbacks) {
+		feedbacks.forEach(function(feedback, i, feedbacks) {
 			var issue = new Issue({
 				category: feedback[CATEGORY],
 				problemsIssues: feedback[PROBLEMS_ISSUES],
@@ -67,22 +67,26 @@ AdFeedbackCollection.prototype = {
 		}, this);
 	},
 		
-	isolateCommonIssues: function () {
+	isolateCommonIssues: function() {
 		if (this.qaResults.length > 1) {
 			var issues = this.qaResults[0].issues;
 
 			var commonIssues = issues.filter(function (issue) {
 				return this.qaResults.every(function (qaResult) {
-					return qaResult.hasSimilarIssue(issue); 
+					return qaResult.hasIssue(issue); 
 				});
 			}, this);
 			
-			commonIssues.forEach(function (issue) {
-				this.qaResults.forEach(function (qaResult) {
-					qaResult.removeSimilarIssue(issue);
-				});
-			}, this);
+			/*commonIssues.forEach(function(issue, i, issues) {
+				var nextIssues = 
+			}, this);*/
 
+			for (var k = 0; k < commonIssues.length; k++) {
+				for (var l = 0; l < this.qaResults.length; l++) {
+					this.qaResults[l].removeIssue(commonIssues[k]);
+				}
+			}
+			
 			if (commonIssues.length > 0) {
 				var allAds = new Ad({id:"", title:"All Ads", format:""});
 				var commonFeedback = new AdFeedback({ads:[allAds], issues:commonIssues});
@@ -92,36 +96,16 @@ AdFeedbackCollection.prototype = {
 	},
 		
 	combineLikeIssues: function () {
-		/*this.qaResults.filter(function(qaResult, i, qaResults) {
-			var nextQAResults = qaResults.slice(i);
-
-			nextQAResults.reduce(function(previousResult, currentResult) {
-				if(previousResult.hasSimilarIssuesAs(currentResult)) {
-					previousResult.insertAd(currentResult.ads[0]);
-				}
-
-				return previousResult;
-			});
-		});*/
-		/*this.qaResults.forEach(function (qaResult, i, qaResults) {
-			var nextQAResults = qaResults.slice(i);
-
-			nextQAResults.forEach(function (nextQAResult) {
-				if (qaResult.hasSimilarIssuesAs(nextQAResult)) {
-					qaResult.insertAd(nextQAResult.ads[0]);
-				}
-
-				qaResults.splice(i + 1, 1);
-			});
-		});*/
 		for (var i = 0; i < this.qaResults.length; i++) {
 			for (var j = i + 1; j < this.qaResults.length; j++) {
-				if (this.qaResults[i].hasSimilarIssuesAs(this.qaResults[j])) {
+				if (this.qaResults[i].hasSameIssuesAs(this.qaResults[j])) {
 					this.qaResults[i].insertAd(this.qaResults[j].ads[0]);
 					this.qaResults.splice(j, 1);
 					j--;
 				}
 			}
+
+			this.qaResults[i].combineLikeIssues();
 		}
 	}
 };
@@ -158,12 +142,7 @@ AdFeedback.prototype = {
 		
 	insertIssue: function (issue) {
 		if (!this.hasIssue(issue)) {
-			if (this.hasSimilarIssue(issue)) {
-				this.getSimilarIssue(issue).combine(issue);
-			}
-			else {
-				this.issues.push(issue);
-			}
+			this.issues.push(issue);
 		}
 	},
 		
@@ -183,48 +162,38 @@ AdFeedback.prototype = {
 		
 		return false;
 	},
-	
-	getSimilarIssueIndex: function (issue) {
-		for (var i = 0; i < this.issues.length; i++) {
-			if (this.issues[i].isSimilarTo(issue)) {
-				return i;
+		
+	removeIssue: function(issue) {
+		if (this.hasIssue(issue)) {
+			return this.issues.splice(this.getIssueIndex(issue), 1);
+		}
+	},
+		
+	hasSameIssuesAs: function (adFeedback) {
+		if (this.issues.length === adFeedback.issues.length) {
+			for (var i = 0; i < this.issues.length; i++) {
+				if (!adFeedback.hasIssue(this.issues[i])) {
+					return false;
+				}
 			}
 		}
-		return -1;
-	},
-
-	getSimilarIssue: function (issue) {
-		var i = this.getSimilarIssueIndex(issue);
-		
-		if (i >= 0) {
-			return this.issues[i];
-		}
-
-		return undefined;
-	},
-
-	hasSimilarIssue: function (issue) {
-		if (this.getSimilarIssueIndex(issue) >= 0) {
-			return true;
-		}
-
-		return false;
-	},
-		
-	removeSimilarIssue: function (issue) {
-		if (this.hasSimilarIssue(issue)) {
-			return this.issues.splice(this.getSimilarIssueIndex(issue), 1);
-		}	
-	},
-		
-	hasSimilarIssuesAs: function (adFeedback) {
-		if (this.issues.length !== adFeedback.issues.length) {
+		else {
 			return false;
 		}
+			
+		return true;
+	},
 
-		return this.issues.every(function (issue) {
-			return adFeedback.hasSimilarIssue(issue);
-		});
+	combineLikeIssues: function() {
+		for (var i = 0; i < this.issues.length - 1; i++) {
+			for (var j = i + 1; j < this.issues.length; j++) {
+				if (this.issues[i].isSimilarTo(this.issues[j])) {
+					this.issues[i].insertAdElements(this.issues[j].adElements);
+					this.issues.splice(j, 1);
+					j--;
+				}	
+			}
+		}
 	}
 };
 
@@ -254,7 +223,7 @@ function Issue(args) {
 	}
 
 	if (args.testPage) {
-		this.testPages = [args.testPage];
+		this.testPage = args.testPage;
 	}
 
 	if (args.additionalNotes) {
@@ -269,28 +238,15 @@ Issue.prototype = {
 		}	
 	},
 
-	insertTestPages: function (testPages) {
-		if(testPages && testPages.length > 0) {
-			this.testPages.push(testPages);
-		}	
-	},
-
-	combine: function (issue) {
-		if (this.isSimilarTo(issue)) {
-			this.insertAdElements(issue.adElements);
-			this.insertTestPages(issue.testPages);
-		}
-	},
-
 	isEqualTo: function (issue) {
 		return (this.adElements === issue.adElements &&
-			this.testPage === issue.testPage &&
 			this.isSimilarTo(issue));
 	},
 
 	isSimilarTo: function (issue) {
 		return (this.category === issue.category &&
 			this.problemsIssues === issue.problemsIssues &&
+			this.testPage === issue.testPage &&
 			this.additionalNotes === issue.additionalNotes);
 	}
 };

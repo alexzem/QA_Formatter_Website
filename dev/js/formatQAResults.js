@@ -90,87 +90,89 @@ function isStringBlank(string) {
 
 function printOutput(adFeedbackCollection) {
 	var qaResults = adFeedbackCollection.qaResults;
-	//var trailingWhiteSpacePattern = /\s$/;
-	//var extraQuotationPattern = /(^")|(\"(?=\"))|("$)/g;
-	
 	var outputString = "";
 	
 	if (qaResults.length > 0) {
 		outputString = "<p><span class=siteSpecification>Site Specification</span><br/>";
 		outputString += "<span class=functionality>Functionality</span><br/>";
-		outputString += "<span class=tracking>Tracking</span></p>";
+		outputString += "<span class=tracking>Tracking</span></p><br/>";
 	}
 	
-	for ( var i = 0; i < qaResults.length; i++) {
-		
-		//Ad ID and title
-		outputString += "<br/><p class='bold'>";
-		
-		for (var j = 0; j < qaResults[i].ads.length; j++) {
-			var ad = qaResults[i].ads[j];
-	
-			outputString += ad.id ? ad.id + " - " : "";
-			outputString += ad.title;
-			outputString += ad.format ? " (" + ad.format + ")": "";
-			outputString += "</p>";
-		}
-		
-		outputString += "<ul>";
-		
-		//Ad issues
-		if (qaResults[i].issues.length > 0) {
-			for (var k = 0; k < qaResults[i].issues.length; k++) {
-				var issue = qaResults[i].issues[k];
-				var categoryClass = getCategoryClass(issue.category);
-
-				outputString += "<li class=";
-				outputString += categoryClass;
-				outputString += ">";
-
-				if (issue.problemsIssues.length > 1) {
-					outputString += issue.problemsIssues;
-
-					var isNotStandardCategory = categoryClass.length === 0;
-
-					if (isNotStandardCategory && issue.adElements.length > 0) {
-						outputString += " [" + issue.adElements.join(', ') + "]";
-					}
-
-				}
-			
-				if (issue.additionalNotes) {
-					if(issue.additionalNotes.length > 1) {
-						if (issue.additionalNotes.length <= 10) {
-							outputString += " (" + issue.additionalNotes + ")";
-						}
-						else {
-							if (issue.problemsIssues.length > 1) {
-								outputString += " - ";
-							}
-							outputString += issue.additionalNotes;
-						}
-					}
-				}
-			
-				if (issue.testPage.length > 1) {
-					outputString += "<br/>";
-					outputString += issue.testPage;
-				}
-			
-				outputString += "</li>";
-			}
-		}
-		else {
-			outputString += "<li>See \"All Ads\"</li>";
-		}
-		
-		//Close remaining tags
-		outputString += "</ul>";
-	}
-	
+	outputString += qaResults.map(getAdFeedback).join("<br/>");
 	outputString = outputString.replace(/[\u201C\u201D\u201E\u201F\u2033\u2036]/g, "\"");
 	
 	qaOutput.innerHTML = outputString;
+}
+
+function getAdFeedback(adFeedback) {
+	//Ad ID and title
+	var html = adFeedback.ads.map(getAdTitles).join("");
+
+	//Ad issues
+	html += "<ul>";
+	
+	if (adFeedback.issues.length > 0) {
+		html += adFeedback.issues.map(getIssues, "").join("");
+	}
+	else {
+		html += "<li>See \"All Ads\"</li>";
+	}
+	
+	html += "</ul>";
+
+	return html;
+}
+
+function getAdTitles(ad) {
+	var html = "<p class='bold'>";
+	html += ad.id ? ad.id + " - " : "";
+	html += ad.title;
+	html += ad.format ? " (" + ad.format + ")": "";
+	html += "</p>";
+	
+	return html;
+}
+
+function getIssues(issue) {
+	var categoryClass = getCategoryClass(issue.category);
+	var html = "<li class=";
+
+	html += categoryClass;
+	html += ">";
+
+	if (issue.problemsIssues.length > 1) {
+		html += issue.problemsIssues;
+
+		var isNotStandardCategory = categoryClass.length === 0;
+
+		if (isNotStandardCategory && issue.adElements.length > 0) {
+			html += " [" + issue.adElements.join(', ') + "]";
+		}
+
+	}
+
+	if (issue.additionalNotes) {
+		if(issue.additionalNotes.length > 1) {
+			if (issue.additionalNotes.length <= 10) {
+				html += " (" + issue.additionalNotes + ")";
+			}
+			else {
+				if (issue.problemsIssues.length > 1) {
+					html += " - ";
+				}
+				html += issue.additionalNotes;
+			}
+		}
+	}
+
+	if (issue.testPages.length > 0) {
+		html += "<br/>";
+		html += "Test page(s): " + issue.testPages.join(" | ");
+	}
+
+	html += "</li>";
+
+	return html;
 }
 
 function getCategoryClass(category) {
