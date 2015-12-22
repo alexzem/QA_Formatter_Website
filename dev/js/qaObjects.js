@@ -2,6 +2,7 @@ function AdFeedbackCollection(inputText) {
 	this.qaResults = [];
 	
 	this.parseFeedback(inputText);
+        this.isolateCommonTestPages();
 	this.isolateCommonIssues();
 	this.combineLikeIssues();
 }
@@ -66,6 +67,32 @@ AdFeedbackCollection.prototype = {
 			}
 		}, this);
 	},
+        
+        isolateCommonTestPages: function() {
+            if (this.qaResults.length > 1) {
+                this.qaResults.forEach(function (qaResult) {
+                    var isThereAtLeastOneIssue = qaResult.issues && qaResult.issues.length > 0;
+                    
+                    if (isThereAtLeastOneIssue) {
+                        var firstIssue = qaResult.issues[0];
+                        var isThereAtLeastOneTestPage = firstIssue.testPages && firstIssue.testPages.length > 0; 
+
+                        if (isThereAtLeastOneTestPage) {
+                            var doAllIssuesHaveSameTestPage = qaResult.issues.every(function (issue) {
+                                return issue.testPages.sort().join(',') === firstIssue.testPages.sort().join(',');
+                            });
+                            
+                            if (doAllIssuesHaveSameTestPage) {
+                                qaResult.ads[0].testPages = firstIssue.testPages;
+                                qaResult.issues.forEach(function (issue) {
+                                    issue.testPages = null;
+                                });
+                            }
+                        }
+                    }
+                });
+            }
+        },
 		
 	isolateCommonIssues: function () {
 		if (this.qaResults.length > 1) {
@@ -85,44 +112,26 @@ AdFeedbackCollection.prototype = {
 
 			if (commonIssues.length > 0) {
 				var allAds = new Ad({id:"", title:"All Ads", format:""});
-				var commonFeedback = new AdFeedback({ads:[allAds], issues:commonIssues});
+				var commonFeedback = new AdFeedback({
+                                    ads: [allAds],
+                                    issues: commonIssues
+                                });
+
 				this.qaResults.unshift(commonFeedback);
 			}
 		}
 	},
 		
 	combineLikeIssues: function () {
-		/*this.qaResults.filter(function(qaResult, i, qaResults) {
-			var nextQAResults = qaResults.slice(i);
-
-			nextQAResults.reduce(function(previousResult, currentResult) {
-				if(previousResult.hasSimilarIssuesAs(currentResult)) {
-					previousResult.insertAd(currentResult.ads[0]);
-				}
-
-				return previousResult;
-			});
-		});*/
-		/*this.qaResults.forEach(function (qaResult, i, qaResults) {
-			var nextQAResults = qaResults.slice(i);
-
-			nextQAResults.forEach(function (nextQAResult) {
-				if (qaResult.hasSimilarIssuesAs(nextQAResult)) {
-					qaResult.insertAd(nextQAResult.ads[0]);
-				}
-
-				qaResults.splice(i + 1, 1);
-			});
-		});*/
-		for (var i = 0; i < this.qaResults.length; i++) {
-			for (var j = i + 1; j < this.qaResults.length; j++) {
-				if (this.qaResults[i].hasSimilarIssuesAs(this.qaResults[j])) {
-					this.qaResults[i].insertAd(this.qaResults[j].ads[0]);
-					this.qaResults.splice(j, 1);
+                this.qaResults.forEach(function (qaResult, i, qaResults) {
+			for (var j = i + 1; j < qaResults.length; j++) {
+				if (qaResult.hasSimilarIssuesAs(qaResults[j])) {
+					qaResult.insertAd(qaResults[j].ads[0]);
+					qaResults.splice(j, 1);
 					j--;
 				}
 			}
-		}
+		});
 	}
 };
 
@@ -272,6 +281,12 @@ Issue.prototype = {
 	insertTestPages: function (testPages) {
 		if(testPages && testPages.length > 0) {
 			this.testPages.push(testPages);
+
+                        this.testPages.forEach(function (testPage, i, testPages) {
+                            if (testPages.indexOf(testPage) >= 0) {
+                                testPages.splice(i, 1);
+                            }
+                        });
 		}	
 	},
 

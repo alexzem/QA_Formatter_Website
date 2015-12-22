@@ -129,6 +129,17 @@ function getAdTitles(ad) {
 	html += ad.title;
 	html += ad.format ? " (" + ad.format + ")": "";
 	html += "</p>";
+
+        if (ad.testPages && ad.testPages.length > 0) {
+            html += "<p>Test page(s): ";
+
+            var anchors = ad.testPages.map(function (testPage) {
+                return "<a href='" + testPage + "' target='_blank'>" + testPage + "</a>";
+            });
+            
+            html += anchors.join(", ");
+            html += "</p>";
+        }
 	
 	return html;
 }
@@ -165,7 +176,7 @@ function getIssues(issue) {
 		}
 	}
 
-	if (issue.testPages.length > 0) {
+	if (issue.testPages && issue.testPages.length > 0) {
 		html += "<br/>";
 		html += "Test page(s): " + issue.testPages.join(" | ");
 	}
