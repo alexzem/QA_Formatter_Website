@@ -4,6 +4,7 @@ var jshint = require('gulp-jshint');
 var minifyCSS = require('gulp-minify-css');
 var minifyHTML = require('gulp-minify-html');
 var sass = require('gulp-sass');
+var jsbeautifier = require('gulp-jsbeautifier');
 var uglify = require('gulp-uglify');
 var usemin = require("gulp-usemin");
 
@@ -15,6 +16,12 @@ gulp.task('lint', function() {
 	return gulp.src(['gulpfile.js', './dev/js/formatQAResults.js', './dev/js/qaObjects.js'])
 		.pipe(jshint())
 		.pipe(jshint.reporter('default'));
+});
+
+gulp.task('jsbeautifier', ['lint'], function() {
+	return gulp.src(['./dev/js/qaObjects.js', './dev/js/formatQAResults.js'])
+		.pipe(jsbeautifier())
+		.pipe(gulp.dest('./dev/js'));
 });
 
 gulp.task('js', ['lint'], function() {
