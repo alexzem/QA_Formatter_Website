@@ -8,6 +8,9 @@
 	<body>
 		<h1>QA FORMATTER</h1>
 		<textarea id="qaInput" title="Paste the QA results from Excel here" placeholder="Paste the QA results from Excel here"></textarea>
+		<div id="additionalSettings">
+			<input id="formatAdditionalCb" name="formatAdditionalCb" type="checkbox"><label for="formatAdditionalCb">Format Additional Flags</label>
+		</div>
 		<button id="selectButton">SELECT</button>
 		<button id="clearButton">CLEAR</button>
 		<div id="qaOutput">The output will appear here</div>
@@ -20,6 +23,7 @@
 		<!-- build:js js/script.js -->
 		<script src="js/modernizr.js" type="text/javascript"></script>
 		<script src="js/qaObjects.js" type="text/javascript"></script>
+        <script src="js/formatAdditionalResultsConfig.js" type="text/javascript"></script>
 		<script src="js/formatQAResults.js" type="text/javascript"></script>
 		<script src="js/googleAnalytics.js" type="text/javascript"></script>
 		<!-- endbuild -->

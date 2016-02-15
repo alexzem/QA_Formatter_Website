@@ -3,125 +3,144 @@
 @import 'qaResults';
 
 html {
-	background: {
-		color: $sizmek-dark-blue;
-	}
-	color: $sizmek-gray;
-	font: $sizmek-font;
-	font: {
-		size: 100%;
-	}
+    background: {
+        color: $sizmek-dark-blue;
+    }
 
+    color: $sizmek-gray;
+    font: $sizmek-font;
+
+    font: {
+        size: 100%;
+    }
 }
 
 body {
-	margin: 0 auto;
-	max-width: 800px;
-	min-width: 300px;
-	width: 80%;
+    margin: 0 auto;
+    max-width: 800px;
+    min-width: 300px;
+    width: 80%;
 }
 
 h1 {
-	color: $sizmek-yellow;
-	font: {
-		size: 2em;
-		weight: normal;
-	}
+    color: $sizmek-yellow;
+
+    font: {
+        size: 2em;
+        weight: normal;
+    }
 }
 
 textArea {
-	font: inherit;
-	height: 5em;
-	margin: {
-		bottom: 1em;
-	}
-	overflow: auto;
-	padding: 5px;
-	resize: vertical;
-	width: 100%;
+    font: inherit;
+    height: 5em;
+
+    margin: {
+        bottom: .5em;
+    }
+
+    overflow: auto;
+    padding: 5px;
+    resize: vertical;
+    width: 100%;
 }
 
 textArea, input, select {
-	background: {
-		color: $sizmek-gray;
-	}
-	border: none;
-	color: $sizmek-dark-blue;
-	outline: {
-		color: $sizmek-yellow;
-	}
+    background: {
+        color: $sizmek-gray;
+    }
+
+    border: none;
+    color: $sizmek-dark-blue;
+
+    outline: {
+        color: $sizmek-yellow;
+    }
 }
 
 ::-webkit-input-placeholder {
-   color: $sizmek-white;
+    color: $sizmek-white;
 }
 
 :-moz-placeholder { /* Firefox 18- */
-   color: $sizmek-white;  
+    color: $sizmek-white;
 }
 
-::-moz-placeholder {  /* Firefox 19+ */
-   color: $sizmek-white;  
+::-moz-placeholder { /* Firefox 19+ */
+    color: $sizmek-white;
 }
 
-:-ms-input-placeholder {  
-   color: $sizmek-white;  
+:-ms-input-placeholder {
+    color: $sizmek-white;
 }
 
 #qaOutput {
-	background: {
-		color: #FFF;
-	}
-	color: #000;
-	padding: 5px;
+    background: {
+        color: #FFF;
+    }
+
+    color: #000;
+    padding: 5px;
 }
 
 #qaOutput p {
-	margin: 0;
+    margin: 0;
 }
 
 ul {
-	margin: 0 0 0 2em;
-} 
+    margin: 0 0 0 2em;
+}
 
 button {
-	background-color: $sizmek-blue; 
-	border: none;
-	color: $sizmek-white;
-	padding: 0.5em;
-	margin: {
-		bottom: 1em;
-		right: 0.2em;
-	}
-	outline: none;
-	text-align:center;
+    background-color: $sizmek-blue;
+    border: none;
+    color: $sizmek-white;
+    padding: 0.5em;
+
+    margin: {
+        bottom: 1em;
+        right: 0.2em;
+    }
+
+    outline: none;
+    text-align: center;
 }
 
-button:hover, button.zeroclipboard-is-hover { 
-	color: $sizmek-yellow; 
+button:hover, button.zeroclipboard-is-hover {
+    color: $sizmek-yellow;
 }
 
-button:active, button.zeroclipboard-is-active { 
-	background-color: lighten($sizmek-blue, 10%); 
+button:active, button.zeroclipboard-is-active {
+    background-color: lighten($sizmek-blue, 10%);
 }
 
 footer {
-	font: {
-		size: 0.8em;
-	}
+    font: {
+        size: 0.8em;
+    }
 }
 
 a {
-	color: $sizmek-light-violet;
-	text: {
-		decoration: none;
-	}
+    color: $sizmek-light-violet;
+
+    text: {
+        decoration: none;
+    }
 }
 
 a:visited {
-	color: darken($sizmek-light-violet, 10%);
+    color: darken($sizmek-light-violet, 10%);
 }
 
 .bold {
-	font-weight: bold;
+    font-weight: bold;
+}
+
+#additionalSettings {
+    margin-bottom: 1em;
+}
+
+#formatAdditionalCb ~ label {
+    margin-left: .3rem;
+    vertical-align: text-top;
 }
