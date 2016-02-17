@@ -45,7 +45,7 @@ AdFeedbackCollection.prototype = {
                 category: feedback[CATEGORY],
                 problemsIssues: feedback[PROBLEMS_ISSUES],
                 adElement: feedback[AD_ELEMENT],
-                testPage: feedback[TEST_PAGE],
+                testPage: feedback[TEST_PAGE].length > 1 ? feedback[TEST_PAGE] : null,
                 additionalNotes: feedback[ADDITIONAL_NOTES]
             });
 
