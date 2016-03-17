@@ -150,7 +150,7 @@ function getAdFeedback(adFeedback) {
     if (adFeedback.issues.length > 0) {
         html += adFeedback.issues.map(getIssues, "").join("");
     } else {
-        html += "<li>See \"All Ads\"</li>";
+        html += '<li>See "All Ads"</li>';
     }
 
     html += "</ul>";
@@ -165,7 +165,7 @@ function getAdTitles(ad) {
     html += ad.format ? " (" + ad.format + ")" : "";
     html += "</p>";
 
-    if (ad.testPages && ad.testPages.length > 0) {
+    if (ad.testPages && ad.testPages.length > 0 && ad.testPages.toString().length > 3) {
         html += "<p>Test page(s): ";
 
         var anchors = ad.testPages.map(function (testPage) {
@@ -212,7 +212,7 @@ function getIssues(issue) {
         }
     }
 
-    if (issue.testPages && issue.testPages.length > 0) {
+    if (issue.testPages && issue.testPages.length > 0 && issue.testPages.toString().length > 3) {
         html += "<br/>";
         html += "Test page(s): " + issue.testPages.join(" | ");
     }
@@ -258,4 +258,4 @@ function ascendingNumericalSort(a, b) {
 
 function selectOutputText() {
     selectText(qaOutput);
-}
+}}
