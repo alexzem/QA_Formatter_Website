@@ -258,4 +258,4 @@ function ascendingNumericalSort(a, b) {
 
 function selectOutputText() {
     selectText(qaOutput);
-}}
+}
