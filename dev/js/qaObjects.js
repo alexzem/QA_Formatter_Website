@@ -58,6 +58,7 @@ AdFeedbackCollection.prototype = {
           format: feedback[FORMAT]
         });
 
+<<<<<<< HEAD
         this.qaResults.push(new AdFeedback({
           ads: [ad],
           issues: [issue]
@@ -83,6 +84,30 @@ AdFeedbackCollection.prototype = {
               if (issue.testPages && issue.testPages.toString().length > 3) {
                 return issue.testPages.sort().join(',') === firstIssue.testPages.sort().join(',');
               }
+=======
+        return rows;
+    },
+
+    parseFeedback: function (input) {
+        var ID = 0;
+        var TITLE = 1;
+        var FORMAT = 2;
+        var CATEGORY = 3;
+        var AD_ELEMENT = 4;
+        var PROBLEMS_ISSUES = 5;
+        var TEST_PAGE = 6;
+        var ADDITIONAL_NOTES = 7;
+
+        var feedbacks = this.parseRawText(input);
+
+        feedbacks.forEach(function (feedback, i, feedbacks) {
+            var issue = new Issue({
+                category: feedback[CATEGORY],
+                problemsIssues: feedback[PROBLEMS_ISSUES],
+                adElement: feedback[AD_ELEMENT],
+                testPage: feedback[TEST_PAGE],
+                additionalNotes: feedback[ADDITIONAL_NOTES]
+>>>>>>> parent of c8ddf07... Merge pull request #11 from alexzem/master
             });
 
             if (doAllIssuesHaveSameTestPage) {
