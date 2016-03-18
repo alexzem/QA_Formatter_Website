@@ -80,7 +80,7 @@ AdFeedbackCollection.prototype = {
           if (isThereAtLeastOneTestPage) {
             var doAllIssuesHaveSameTestPage = qaResult.issues.every(function(issue) {
               //Prevents same testpages from displaying seperately
-              if (issue.testPages.toString().length > 3) {
+              if (issue.testPages && issue.testPages.toString().length > 3) {
                 return issue.testPages.sort().join(',') === firstIssue.testPages.sort().join(',');
               }
             });
